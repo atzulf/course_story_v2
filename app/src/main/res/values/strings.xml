@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">LoginWithAnimation</string>
+    <string name="signup">Daftar</string>
+    <string name="login">Masuk</string>
+    <string name="message_welcome_page">Aplikasi pelatihan Kotlin Android oleh Bangkit Academy 2024 Batch 2 | Created By Ataka Dzulfikar</string>
+    <string name="title_welcome_page">Selamat datang di Story App</string>
+    <string name="title_signup_page">Lengkapi data dirimu di bawah ini ya</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="message_login_page">Silahkan isi terlebih dahulu</string>
+    <string name="title_login_page">Sudah siapkah untuk belajar? </string>
+    <string name="name">Nama</string>
+    <string name="message_main_page">Selamat Belajar di Dicoding.</string>
+    <string name="greeting">Halo %1$s,</string>
+    <string name="logout">Keluar</string>
+    <string name="password_error">Password harus lebih dari 8 karaker atau huruf</string>
+    <string name="email_error">Isikan format email dengan benar</string>
+    <string name="name_error">isikan nama dengan benar</string>
+    <string name="add_icon">add\n</string>
+    <string name="title_description">deskripsi</string>
+    <string name="imagedetail">foto</string>
+    <string name="camera">Upload Kamera</string>
+    <string name="gallery">Upload Galeri</string>
+    <string name="description">Tambahkan Deskripsi disini</string>
+    <string name="upload">Unggah</string>
+    <string name="register_to_login">Sudah ada akun? Klik disini</string>
+    <string name="login_to_register">Belum punya Akun? Klik disini</string>
+</resources>
