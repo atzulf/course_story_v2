@@ -14,6 +14,7 @@ import com.submision.coursestory.R
 
 class MyPassword : AppCompatEditText, View.OnTouchListener {
 
+//    halo
     private lateinit var clearButtonImage: Drawable
 
     constructor(context: Context) : super(context) {
