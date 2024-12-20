@@ -15,6 +15,7 @@ import com.submision.coursestory.databinding.ActivityMainBinding
 import com.submision.coursestory.view.welcome.WelcomeActivity
 import com.submision.coursestory.data.response.ListStoryItem
 import com.submision.coursestory.view.detail.DetailStoryActivity
+import com.submision.coursestory.view.maps.MapsActivity
 import com.submision.coursestory.view.upload.UploadActivity
 
 class MainActivity : AppCompatActivity() {
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
         setupAction()
 
         kliktoupload()
+        keMaps()
 
         // Memuat cerita dari ViewModel
         viewModel.fetchStories()
@@ -105,6 +107,13 @@ class MainActivity : AppCompatActivity() {
     private fun kliktoupload() {
         binding.fab.setOnClickListener {
             val intent = Intent(this, UploadActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun keMaps() {
+        binding.mapsButton.setOnClickListener {
+            val intent = Intent(this, MapsActivity::class.java)
             startActivity(intent)
         }
     }
