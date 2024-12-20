@@ -8,7 +8,6 @@ import com.submision.coursestory.data.api.ApiService
 import com.submision.coursestory.data.pref.UserPreference
 import com.submision.coursestory.data.response.AllStoriesResponse
 import com.submision.coursestory.data.response.ErrorResponse
-import com.submision.coursestory.data.response.ListStoryItem
 import com.submision.coursestory.data.response.LoginResponse
 import com.submision.coursestory.data.response.UploadResponse
 import kotlinx.coroutines.flow.Flow
@@ -43,11 +42,16 @@ class UserRepository private constructor(
         null
     }
 
-    fun uploadStory(file : MultipartBody.Part, description: RequestBody): LiveData<Result<UploadResponse>> = liveData{
+    fun uploadStory(
+        file: MultipartBody.Part,
+        description: RequestBody,
+        lat: RequestBody?,
+        lon: RequestBody?
+    ): LiveData<Result<UploadResponse>> = liveData{
         emit(Result.Loading)
         try{
             val token = userPreference.getSession().first().token
-            val response = apiService.uploadStory("Bearer $token",file,description)
+            val response = apiService.uploadStory("Bearer $token",file,description,lat,lon)
             emit(Result.Success(response))
         }catch (e: HttpException) {
             val jsonInString = e.response()?.errorBody()?.string()
@@ -56,6 +60,7 @@ class UserRepository private constructor(
             emit(Result.Error(errorMessage.toString()))
         }
     }
+
 
     fun getStoriesWithLocation(location: Int): LiveData<Result<AllStoriesResponse>> = liveData {
         emit(Result.Loading)

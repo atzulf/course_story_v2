@@ -11,9 +11,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.submision.coursestory.R
+import com.submision.coursestory.data.result.Result
 import com.submision.coursestory.data.utils.getImageUri
 import com.submision.coursestory.data.utils.reduceFileImage
 import com.submision.coursestory.data.utils.uriToFile
@@ -26,8 +24,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import com.submision.coursestory.data.result.Result
-import java.io.File
 
 class UploadActivity : AppCompatActivity() {
     private lateinit var binding: ActivityUploadBinding
@@ -35,20 +31,26 @@ class UploadActivity : AppCompatActivity() {
     private val viewModel by viewModels<UploadViewModel> {
         ViewModelFactory.getInstance(this)
     }
+    private var currentLat: Double? = null
+    private var currentLong: Double? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUploadBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Set up listeners
         binding.btnGallery.setOnClickListener { startGallery() }
         binding.btnCamera.setOnClickListener { startCamera() }
         binding.buttonAdd.setOnClickListener { uploadStory() }
+
     }
 
 
+
     private fun startGallery() {
-        launcherGallery.launch(PickVisualMediaRequest(
-            ActivityResultContracts.PickVisualMedia.ImageOnly)
+        launcherGallery.launch(
+            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
         )
     }
 
@@ -78,12 +80,13 @@ class UploadActivity : AppCompatActivity() {
         }
     }
 
-    fun showImage(){
+    private fun showImage() {
         currentImageUri?.let {
             Log.d("Image URI", "showImage: $it")
             binding.ivPreview.setImageURI(it)
         }
     }
+
     private fun showLoading(loading: Boolean) {
         val animation = if (loading) {
             AlphaAnimation(0f, 1f).apply {
@@ -97,6 +100,7 @@ class UploadActivity : AppCompatActivity() {
         binding.progressBar.startAnimation(animation)
         binding.progressBar.visibility = if (loading) View.VISIBLE else View.GONE
     }
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
@@ -111,28 +115,25 @@ class UploadActivity : AppCompatActivity() {
 
                 val requestBody = desc.toRequestBody("text/plain".toMediaType())
                 val requestImageFile = imageFile.asRequestBody("image/jpeg".toMediaType())
-
                 val multipartBody =
                     MultipartBody.Part.createFormData("photo", imageFile.name, requestImageFile)
 
                 viewModel.uploadStory(multipartBody, requestBody)
                     .observe(this) { response ->
                         when (response) {
-                            is Result.Error -> showToast(
-                                "Gagal Mengupload Foto Karena ${response.exception}"
-                            )
+                            is Result.Error -> {
+                                showToast("Gagal Mengupload Foto Karena ${response.exception}")
+                                showLoading(false)
+                            }
 
-                            Result.Loading -> showLoading(
-                                true
-                            )
+                            Result.Loading -> showLoading(true)
 
                             is Result.Success -> {
                                 showToast("Berhasil Mengupload Data")
-                                runBlocking {
-                                    delay(500)
-                                }
+                                runBlocking { delay(500) }
                                 val intent = Intent(this, MainActivity::class.java)
-                                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                                intent.flags =
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                                 startActivity(intent)
                             }
                         }
