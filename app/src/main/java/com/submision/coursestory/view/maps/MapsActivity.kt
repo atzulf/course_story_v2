@@ -1,28 +1,33 @@
 package com.submision.coursestory.view.maps
 
-import android.content.ContentValues.TAG
 import android.content.pm.PackageManager
 import android.content.res.Resources
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.telecom.Call
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-
+import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.submision.coursestory.R
+import com.submision.coursestory.data.response.AllStoriesResponse
+import com.submision.coursestory.data.response.ListStoryItem
 import com.submision.coursestory.databinding.ActivityMapsBinding
+import com.submision.coursestory.view.ViewModelFactory
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+    private val mapsViewModel: MapsViewModel by viewModels { ViewModelFactory.getInstance(application) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,15 +41,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -56,6 +52,62 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         getMyLocation()
         setMapStyle()
 
+        observeStoriesWithLocation()
+
+        val yogyakarta = LatLng(-7.797068, 110.370529) // Koordinat Yogyakarta
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(yogyakarta, 12f))
+    }
+
+    private fun observeStoriesWithLocation() {
+        mapsViewModel.storiesWithLocation.observe(this, Observer { stories ->
+            if (stories != null && stories.isNotEmpty()) {
+                Log.d(TAG, "Loaded ${stories.size} stories with location")
+                addMarkersToMap(stories)
+            } else {
+                Log.d(TAG, "No stories with location found.")
+            }
+        })
+
+        // Trigger fetching stories with location
+        mapsViewModel.fetchStoriesWithLocation(1)
+    }
+
+    private fun addMarkersToMap(stories: List<ListStoryItem>) {
+        val boundsBuilder = LatLngBounds.Builder()
+
+        stories.forEach { story ->
+            val latLng = story.lat?.let { story.lon?.let { it1 -> LatLng(it, it1) } }
+            latLng?.let {
+                MarkerOptions()
+                    .position(it)
+                    .title(story.name)
+                    .snippet(story.description)
+            }?.let {
+                mMap.addMarker(
+                    it
+                )
+            }
+        }
+
+//        stories.forEach { story ->
+//            val lat = story.lat
+//            val lon = story.lon
+//            if (lat == null || lon == null) {
+//                Log.e(TAG, "Story ${story.name} is missing lat or lon")
+//                return@forEach
+//            }
+//            mMap.addMarker(
+//                MarkerOptions()
+//                    .position(LatLng(lat, lon))
+//                    .title(story.name)
+//                    .snippet(story.description)
+//            )
+//            boundsBuilder.include(LatLng(lat, lon))
+//        }
+
+        // Zoom the map to show all markers
+        val bounds = boundsBuilder.build()
+        mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
     }
 
     private fun setMapStyle() {
@@ -72,7 +124,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val requestPermissionLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
+            androidx.activity.result.contract.ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
                 getMyLocation()
@@ -94,6 +146,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     companion object {
         private const val TAG = "MapsActivity"
     }
-
 }
-

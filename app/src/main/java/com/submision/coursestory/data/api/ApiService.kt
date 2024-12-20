@@ -7,7 +7,6 @@ import com.submision.coursestory.data.response.RegisterResponse
 import com.submision.coursestory.data.response.UploadResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -55,6 +54,7 @@ interface ApiService {
 
     @GET("stories")
     suspend fun getStoriesWithLocation(
-        @Query("location") location : Int = 1,
+        @Header("Authorization") token: String,
+        @Query("location") location: Int = 1,
     ): AllStoriesResponse
 }

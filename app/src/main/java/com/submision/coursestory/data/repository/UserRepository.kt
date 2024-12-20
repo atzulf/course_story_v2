@@ -8,6 +8,7 @@ import com.submision.coursestory.data.api.ApiService
 import com.submision.coursestory.data.pref.UserPreference
 import com.submision.coursestory.data.response.AllStoriesResponse
 import com.submision.coursestory.data.response.ErrorResponse
+import com.submision.coursestory.data.response.ListStoryItem
 import com.submision.coursestory.data.response.LoginResponse
 import com.submision.coursestory.data.response.UploadResponse
 import kotlinx.coroutines.flow.Flow
@@ -56,7 +57,16 @@ class UserRepository private constructor(
         }
     }
 
-
+    fun getStoriesWithLocation(location: Int): LiveData<Result<AllStoriesResponse>> = liveData {
+        emit(Result.Loading)
+        try {
+            val token = userPreference.getSession().first().token
+            val response = apiService.getStoriesWithLocation("Bearer $token", 1)
+            emit(Result.Success(response))
+        } catch (e: Exception) {
+            emit(Result.Error(e.message.toString()))
+        }
+    }
 
     suspend fun saveSession(user: com.submision.coursestory.data.pref.UserModel) {
         userPreference.saveSession(user)
