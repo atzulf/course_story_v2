@@ -3,11 +3,17 @@ package com.submision.coursestory.data.repository
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.liveData
 import com.google.gson.Gson
 import com.submision.coursestory.data.api.ApiService
+import com.submision.coursestory.data.local.StoryPagingSource
 import com.submision.coursestory.data.pref.UserPreference
 import com.submision.coursestory.data.response.AllStoriesResponse
 import com.submision.coursestory.data.response.ErrorResponse
+import com.submision.coursestory.data.response.ListStoryItem
 import com.submision.coursestory.data.response.LoginResponse
 import com.submision.coursestory.data.response.UploadResponse
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +27,16 @@ class UserRepository private constructor(
     private val apiService: ApiService,
     private val userPreference: UserPreference
 ) {
+    fun getStory(): LiveData<PagingData<ListStoryItem>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 5
+            ),
+            pagingSourceFactory = {
+                StoryPagingSource(apiService, userPreference)
+            }
+        ).liveData
+    }
 
     suspend fun register(name: String, email: String, password: String) =
         apiService.register(name, email, password)
