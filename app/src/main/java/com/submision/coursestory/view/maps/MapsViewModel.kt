@@ -28,7 +28,6 @@ class MapsViewModel(private val repository: UserRepository) : ViewModel() {
                     when (response) {
 
                         is Result.Error -> {
-                            // Log error or show a message
                             _isLoading.value = false
                         }
                         Result.Loading -> {
@@ -41,7 +40,6 @@ class MapsViewModel(private val repository: UserRepository) : ViewModel() {
                 }
             } catch (e: Exception) {
                 _isLoading.value = false
-                // Log error or show a message
             }
         }
     }

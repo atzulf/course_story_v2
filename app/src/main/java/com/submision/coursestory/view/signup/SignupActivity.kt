@@ -51,7 +51,6 @@ class SignupActivity : AppCompatActivity() {
             val email = binding.edRegisterEmail.text.toString().trim()
             val password = binding.edRegisterPassword.text.toString().trim()
 
-            // Validasi input name, email, dan password
             if (name.isEmpty()) {
                 binding.edRegisterName.error = getString(R.string.name_error)
                 return@setOnClickListener

@@ -33,10 +33,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Inisialisasi RecyclerView dan Adapter dengan onItemClick
         setupRecyclerView()
 
-        // Observasi sesi pengguna
         viewModel.getSession().observe(this) { user ->
             if (!user.isLogin) {
                 startActivity(Intent(this, WelcomeActivity::class.java))
@@ -44,19 +42,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Observasi data cerita
         observeStories()
-
-        // Mengatur tampilan dan aksi tombol logout
         setupView()
         setupAction()
-
         kliktoupload()
         keMaps()
-
         getData()
-
-        // Memuat cerita dari ViewModel
         viewModel.fetchStories()
     }
 
@@ -89,10 +80,9 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun onStoryClick(story: ListStoryItem) {
-        // Handle the click event, for example, navigate to a detail page
         Toast.makeText(this, "Clicked on: ${story.name}", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, DetailStoryActivity::class.java)
-        intent.putExtra("story_id", story.id)  // Mengirimkan object story
+        intent.putExtra("story_id", story.id)
         startActivity(intent)
     }
 

@@ -17,8 +17,8 @@ class SignUpViewModel(private val repository: UserRepository) : ViewModel() {
         viewModelScope.launch {
             signupState.value = Result.Loading
             try {
-                val response = repository.register(name, email, password)  // Mengembalikan RegisterResponse
-                signupState.value = Result.Success(response)  // Sesuaikan dengan tipe yang benar
+                val response = repository.register(name, email, password)
+                signupState.value = Result.Success(response)
             } catch (e: Exception) {
                 signupState.value = Result.Error(e.message ?: "Unknown Error")
             }

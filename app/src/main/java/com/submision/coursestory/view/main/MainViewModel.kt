@@ -16,34 +16,29 @@ class MainViewModel(private val repository: UserRepository) : ViewModel() {
     val story: LiveData<PagingData<ListStoryItem>> =
         repository.getStory().cachedIn(viewModelScope)
 
-    // LiveData untuk daftar cerita
     private val _stories = MutableLiveData<List<ListStoryItem>>()
     val stories: LiveData<List<ListStoryItem>> = _stories
 
-    // Mendapatkan sesi pengguna
     fun getSession(): LiveData<com.submision.coursestory.data.pref.UserModel> {
         return repository.getSession().asLiveData()
     }
 
-    // Fungsi logout
     fun logout() {
         viewModelScope.launch {
             repository.logout()
         }
     }
 
-    // Mendapatkan daftar cerita dari repository
     fun fetchStories() {
         viewModelScope.launch {
             try {
                 val response = repository.getStories()
                 if (response.listStory != null) {
-                    _stories.postValue(response.listStory.filterNotNull()) // Hanya menyimpan item yang tidak null
+                    _stories.postValue(response.listStory.filterNotNull())
                 } else {
-                    _stories.postValue(emptyList()) // Jika kosong, kirim list kosong
+                    _stories.postValue(emptyList())
                 }
             } catch (e: Exception) {
-                // Tangani error dengan mengirim list kosong atau log error
                 _stories.postValue(emptyList())
             }
         }

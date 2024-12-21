@@ -35,7 +35,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -68,7 +67,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         })
 
-        // Trigger fetching stories with location
         mapsViewModel.fetchStoriesWithLocation(1)
     }
 
@@ -89,23 +87,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-//        stories.forEach { story ->
-//            val lat = story.lat
-//            val lon = story.lon
-//            if (lat == null || lon == null) {
-//                Log.e(TAG, "Story ${story.name} is missing lat or lon")
-//                return@forEach
-//            }
-//            mMap.addMarker(
-//                MarkerOptions()
-//                    .position(LatLng(lat, lon))
-//                    .title(story.name)
-//                    .snippet(story.description)
-//            )
-//            boundsBuilder.include(LatLng(lat, lon))
-//        }
-
-        // Zoom the map to show all markers
         val bounds = boundsBuilder.build()
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
     }

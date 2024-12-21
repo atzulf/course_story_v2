@@ -39,14 +39,11 @@ class UploadActivity : AppCompatActivity() {
         binding = ActivityUploadBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Set up listeners
         binding.btnGallery.setOnClickListener { startGallery() }
         binding.btnCamera.setOnClickListener { startCamera() }
         binding.buttonAdd.setOnClickListener { uploadStory() }
 
     }
-
-
 
     private fun startGallery() {
         launcherGallery.launch(

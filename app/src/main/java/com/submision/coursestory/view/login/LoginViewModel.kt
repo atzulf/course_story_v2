@@ -11,43 +11,34 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: UserRepository) : ViewModel() {
 
-    // MutableStateFlow for handling login state
     private val _loginState = MutableStateFlow<Result<String>>(Result.Loading)
     val loginState: StateFlow<Result<String>> = _loginState
 
-    /**
-     * Function to handle login
-     */
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            _loginState.value = Result.Loading // Emit loading state
+            _loginState.value = Result.Loading
             try {
                 val loginResponse = repository.login(email, password)
 
-                // Extract loginResult from LoginResponse
                 val loginResult = loginResponse.loginResult
                 if (loginResult != null && !loginResult.token.isNullOrEmpty()) {
-                    // Save session with UserModel
+
                     val user = UserModel(
                         email = email,
                         token = loginResult.token,
                         isLogin = true
                     )
-                    saveSession(user) // Save user session
-                    _loginState.value = Result.Success("Login successful") // Emit success state
+                    saveSession(user)
+                    _loginState.value = Result.Success("Login successful")
                 } else {
                     _loginState.value = Result.Error("Login failed: Missing token")
                 }
             } catch (e: Exception) {
-                _loginState.value = Result.Error(e.message ?: "Login failed") // Emit error state
+                _loginState.value = Result.Error(e.message ?: "Login failed")
             }
         }
     }
 
-
-    /**
-     * Save user session to DataStore
-     */
     private fun saveSession(user: UserModel) {
         viewModelScope.launch {
             repository.saveSession(user)
