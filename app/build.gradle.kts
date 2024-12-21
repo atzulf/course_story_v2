@@ -72,4 +72,16 @@ dependencies {
     implementation ("androidx.room:room-paging:2.4.0-rc01")
     implementation ("androidx.paging:paging-runtime-ktx:3.1.0")
 
+    // Core Testing Library
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+
+    // Kotlinx Coroutines Test
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1")
+
+    // Mockito Core
+    testImplementation("org.mockito:mockito-core:4.4.0")
+
+    // Mockito Inline
+    testImplementation("org.mockito:mockito-inline:4.4.0")
+
 }
