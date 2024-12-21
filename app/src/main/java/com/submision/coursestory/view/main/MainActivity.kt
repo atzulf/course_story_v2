@@ -67,14 +67,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeStories() {
-        viewModel.stories.observe(this) { stories ->
-            if (stories.isNotEmpty()) {
-                storyAdapter.submitList(stories)
-            } else {
-                Toast.makeText(this, "No stories available", Toast.LENGTH_SHORT).show()
-            }
+        viewModel.story.observe(this) { pagingData ->
+            storyAdapter.submitData(lifecycle, pagingData)
         }
     }
+
 
     private fun onStoryClick(story: ListStoryItem) {
         // Handle the click event, for example, navigate to a detail page

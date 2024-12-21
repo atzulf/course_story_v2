@@ -1,5 +1,6 @@
 package com.submision.coursestory.data.local
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.submision.coursestory.data.api.ApiService
@@ -20,7 +21,8 @@ class StoryPagingSource(
         val position = params.key ?: INITIAL_PAGE_INDEX
         return try {
             val token = userPreference.getSession().first().token
-            val response = apiService.getStories(token, position, params.loadSize)
+            Log.d("StoryPagingSource", "Token: $token")
+            val response = apiService.getStories("Bearer $token", position, params.loadSize)
             val responseData = response.listStory?.filterNotNull() ?: emptyList()
 
             LoadResult.Page(
