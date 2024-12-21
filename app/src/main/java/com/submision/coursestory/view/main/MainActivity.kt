@@ -14,6 +14,7 @@ import com.submision.coursestory.data.pref.dataStore
 import com.submision.coursestory.databinding.ActivityMainBinding
 import com.submision.coursestory.view.welcome.WelcomeActivity
 import com.submision.coursestory.data.response.ListStoryItem
+import com.submision.coursestory.view.adapter.LoadingStateAdapter
 import com.submision.coursestory.view.detail.DetailStoryActivity
 import com.submision.coursestory.view.maps.MapsActivity
 import com.submision.coursestory.view.upload.UploadActivity
@@ -53,8 +54,22 @@ class MainActivity : AppCompatActivity() {
         kliktoupload()
         keMaps()
 
+        getData()
+
         // Memuat cerita dari ViewModel
         viewModel.fetchStories()
+    }
+
+    private fun getData() {
+        val adapter = storyAdapter
+        binding.rvStories.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
+        viewModel.story.observe(this) { pagingData ->
+            storyAdapter.submitData(lifecycle, pagingData)
+        }
     }
 
     private fun setupRecyclerView() {
