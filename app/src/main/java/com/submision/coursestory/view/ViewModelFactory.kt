@@ -44,15 +44,15 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
         private var INSTANCE: ViewModelFactory? = null
         @JvmStatic
         fun getInstance(context: Context): ViewModelFactory {
-            if (ViewModelFactory.Companion.INSTANCE == null) {
+            if (INSTANCE == null) {
                 synchronized(ViewModelFactory::class.java) {
-                    ViewModelFactory.Companion.INSTANCE =
+                    INSTANCE =
                         ViewModelFactory(
                             Injection.provideRepository(context)
                         )
                 }
             }
-            return ViewModelFactory.Companion.INSTANCE as ViewModelFactory
+            return INSTANCE as ViewModelFactory
         }
     }
 }
