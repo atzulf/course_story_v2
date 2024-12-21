@@ -41,18 +41,18 @@ class ViewModelFactory(private val repository: UserRepository) : ViewModelProvid
 
     companion object {
         @Volatile
-        private var INSTANCE: com.submision.coursestory.view.ViewModelFactory? = null
+        private var INSTANCE: ViewModelFactory? = null
         @JvmStatic
-        fun getInstance(context: Context): com.submision.coursestory.view.ViewModelFactory {
-            if (com.submision.coursestory.view.ViewModelFactory.Companion.INSTANCE == null) {
-                synchronized(com.submision.coursestory.view.ViewModelFactory::class.java) {
-                    com.submision.coursestory.view.ViewModelFactory.Companion.INSTANCE =
-                        com.submision.coursestory.view.ViewModelFactory(
+        fun getInstance(context: Context): ViewModelFactory {
+            if (ViewModelFactory.Companion.INSTANCE == null) {
+                synchronized(ViewModelFactory::class.java) {
+                    ViewModelFactory.Companion.INSTANCE =
+                        ViewModelFactory(
                             Injection.provideRepository(context)
                         )
                 }
             }
-            return com.submision.coursestory.view.ViewModelFactory.Companion.INSTANCE as com.submision.coursestory.view.ViewModelFactory
+            return ViewModelFactory.Companion.INSTANCE as ViewModelFactory
         }
     }
 }
