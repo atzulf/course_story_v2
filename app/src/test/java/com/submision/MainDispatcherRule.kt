@@ -1,4 +1,4 @@
-package com.dicoding.submision.coursestory
+package com.submision
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

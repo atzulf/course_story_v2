@@ -1,4 +1,4 @@
-package com.dicoding.submision.coursestory
+package com.submision
 
 import com.submision.coursestory.data.response.ListStoryItem
 

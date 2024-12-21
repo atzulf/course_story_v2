@@ -1,4 +1,4 @@
-package com.dicoding.submision.coursestory
+package com.submision
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
